@@ -116,4 +116,11 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <select id="findcheckedById" parameterType="java.lang.Integer" resultType="com.mzj.dao.pojo.Cart">
+SELECT
+<include refid="Base_Column_List" />
+    FROM mmall_cart
+    WHERE user_id = #{user_id}
+  </select>
 </mapper>

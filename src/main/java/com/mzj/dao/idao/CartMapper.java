@@ -2,6 +2,8 @@ package com.mzj.dao.idao;
 
 import com.mzj.dao.pojo.Cart;
 
+import java.util.List;
+
 public interface CartMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +16,6 @@ public interface CartMapper {
     int updateByPrimaryKeySelective(Cart record);
 
     int updateByPrimaryKey(Cart record);
+
+    List<Cart> findcheckedById(Integer userid);
 }

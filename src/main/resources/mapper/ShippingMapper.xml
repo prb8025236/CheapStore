@@ -176,4 +176,9 @@
       update_time = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+  <select id="selectAllByUserId" resultMap="BaseResultMap">
+  SELECT
+  <include refid="Base_Column_List"/>
+  from mmall_shipping where user_id =#{userId}
+</select>
 </mapper>

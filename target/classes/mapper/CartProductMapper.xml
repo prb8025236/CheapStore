@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mzj.dao.idao.CartProductMapper">
+    <resultMap id="cartProductMap" type="com.mzj.dao.vo.CartProduct">
+        <result column="id" property="id"></result>
+        <result column="user_id" property="userId"></result>
+        <result column="product_id" property="productId"></result>
+        <result column="quantity" property="quantity"></result>
+        <result column="name" property="productName"></result>
+        <result column="subtitle" property="productSubtitle"></result>
+        <result column="main_image" property="productMainImage"></result>
+        <result column="price" property="productPrice"></result>
+        <result column="status" property="productStatus"></result>
+        <result column="productTotalPrice" property="productTotalPrice"></result>
+        <result column="stock" property="productStock"></result>
+        <result column="checked" property="productChecked"></result>
+    </resultMap>
+    <select id="cartFindAllProducts" resultMap="cartProductMap" parameterType="int">
+        SELECT c.id,c.user_id,c.product_id,c.quantity,p.`name`,p.subtitle,p.main_image,p.price,p.`status`,c.quantity*p.price productTotalPrice,p.stock,c.checked
+        FROM mmall_cart c,mmall_product p
+        WHERE c.product_id = p.id AND c.user_id = #{user_id};
+    </select>
+    <insert id="cartAddProduct" parameterType="com.mzj.dao.pojo.Cart">
+        insert into mmall_cart (user_id, product_id,
+        quantity, checked, create_time,
+        update_time)
+        values (#{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER},
+        #{quantity,jdbcType=INTEGER}, 1, now(),
+        now())
+    </insert>
+    <update id="cartUpdateNum" parameterType="int">
+        UPDATE mmall_cart set quantity = #{count} where product_id = #{productId}
+    </update>
+    <delete id="cartDeleteProducts" parameterType="com.mzj.dao.vo.CartProductDelete">
+    DELETE FROM mmall_cart WHERE user_id = #{userId} and product_id in
+    <foreach collection="productIds" index="index" item="productIds" open="(" separator="," close=")">
+        #{productIds}
+    </foreach>
+    </delete>
+    <select id="getCartProductNum" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM mmall_cart WHERE user_id = #{userId}
+    </select>
+    <update id="cartSelect" parameterType="int">
+        UPDATE mmall_cart SET checked = 1 WHERE product_id = #{productId}
+    </update>
+    <update id="cartUnSelect" parameterType="int">
+        UPDATE mmall_cart SET checked = 0 WHERE product_id = #{productId}
+    </update>
+    <update id="cartSelectAll" parameterType="int">
+        UPDATE mmall_cart SET checked = 1 WHERE user_id = #{userId}
+    </update>
+    <update id="cartUnSelectAll" parameterType="int">
+        UPDATE mmall_cart SET checked = 0 WHERE user_id = #{userId}
+    </update>
+</mapper>
